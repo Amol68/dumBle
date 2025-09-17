@@ -1,23 +1,49 @@
 const express = require("express");
-require("./config/database")
+const connectDB = require("./config/database");
 const app = express();
 const port = 3000;
+const User = require("./models/user");
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+connectDB()
+  .then(() => {
+    console.log("Database Connection Successfull");
+    app.listen(port, () => {
+      console.log(`Example app listening on port ${port}`);
+    });
+  })
+  .catch((err) => {
+    console.log("Database Connection Failed");
+  });
 
-app.use("/getUserData", (req, res) => {
-  // db query & other logic
-  throw new Error();
-  res.send("user data sent");
-});
+app.post("/signup", async (req, res) => {
+  const userDetails = {
+    firstName: "Amol",
+    lastName: "Kadam",
+    email: "amol@gmail.com",
+    password: "wwkdd8dw",
+  };
 
-app.use("/", (err, req, res, next) => {
-  if (err) {
-    res.download();
+  const user = new User(userDetails);
+  try {
+    await user.save();
+    res.send("User added successfully");
+  } catch (error) {
+    res.status(400).send(`Error Saving The User ${error.message}`);
+    //console.log("Account Creation Failed");
   }
 });
+
+// app.use("/getUserData", (req, res) => {
+//   // db query & other logic
+//   throw new Error();
+//   res.send("user data sent");
+// });
+
+// app.use("/", (err, req, res, next) => {
+//   if (err) {
+//     res.download();
+//   }
+// });
 // app.get("/admin/getData",(req,res)=>{
 //    res.send("Admin Response")
 // })
