@@ -15,21 +15,16 @@ connectDB()
     console.log("Database Connection Failed");
   });
 
-app.post("/signup", async (req, res) => {
-  const userDetails = {
-    firstName: "Amol",
-    lastName: "Kadam",
-    email: "amol@gmail.com",
-    password: "wwkdd8dw",
-  };
+app.use(express.json());
 
-  const user = new User(userDetails);
+app.post("/signup", async (req, res) => {
+  console.log(req.body);
+  const user = new User(req.body);
   try {
     await user.save();
     res.send("User added successfully");
   } catch (error) {
     res.status(400).send(`Error Saving The User ${error.message}`);
-    //console.log("Account Creation Failed");
   }
 });
 
