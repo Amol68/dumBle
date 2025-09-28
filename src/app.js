@@ -1,8 +1,11 @@
 const express = require("express");
 const connectDB = require("./config/database");
+const bcrypt = require("bcrypt");
 const app = express();
 const port = 3000;
 const User = require("./models/user");
+const { validateSignUpData } = require("./utils/validations");
+
 
 connectDB()
   .then(() => {
@@ -17,16 +20,41 @@ connectDB()
 
 app.use(express.json()); // global mw to convert JSON into object
 
-app.post("/signup", async (req, res) => {
-  const user = new User(req.body);
+// login api
+app.post("/login", async (req, res) => {
   try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email: email });
+
+    if (!user) res.send("Invalid Email");
+
+    const isCorrect = bcrypt.compare(password, user.password);
+
+    if (isCorrect) res.send("User Login Successfull");
+    else throw new Error("Incorrect Password");
+  } catch {}
+});
+
+app.post("/signup", async (req, res) => {
+  const { firstName, lastName, email, password } = req.body;
+
+  const hash = await bcrypt.hash(password, 10);
+
+  const user = new User({
+    firstName,
+    lastName,
+    email,
+    password: hash,
+  });
+
+  try {
+    validateSignUpData(req);
     await user.save();
     res.send("User added successfully");
   } catch (error) {
     res.status(400).send(`Error Saving The User ${error.message}`);
   }
 });
-
 // feed API: get all users from DB
 app.get("/feed", async (req, res) => {
   try {
@@ -73,25 +101,27 @@ app.patch("/user/:userID", async (req, res) => {
   const body = req.body;
   const userID = req.params?.userID;
 
-  const allowedFields = [
-    "id",
-    "firstName",
-    "lastName",
-    "password",
-    "about",
-    "gender",
-    "skills",
-  ];
+  // const allowedFields = [
+  //   "id",
+  //   "firstName",
+  //   "lastName",
+  //   "password",
+  //   "about",
+  //   "gender",
+  //   "skills",
+  // ];
 
-  const isUpdateAllowed = Object.keys(body).every((key) =>
-    allowedFields.includes(key)
-  );
-  if (!isUpdateAllowed) res.send("Update Not Allowed");
+  // const isUpdateAllowed = Object.keys(body).every((key) =>
+  //   allowedFields.includes(key)
+  // );
+  // if (!isUpdateAllowed) res.send("Update Not Allowed");
 
-  if (req.body.skills > 10) res.send("Too Many Skills");
+  // if (req.body.skills > 10) res.send("Too Many Skills");
 
   try {
-    await User.findByIdAndUpdate({ _id: userID }, body, {
+    validateSignUpData(req);
+
+    const hash = await User.findByIdAndUpdate({ _id: userID }, body, {
       runValidators: true,
     });
     res.send("User Updated Successfully");
