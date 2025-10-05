@@ -1,11 +1,13 @@
 const express = require("express");
 const connectDB = require("./config/database");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
 const app = express();
 const port = 3000;
 const User = require("./models/user");
 const { validateSignUpData } = require("./utils/validations");
-
+const jwt = require("jsonwebtoken");
+const { userAuth } = require("../src/middlewares/auth");
 
 connectDB()
   .then(() => {
@@ -18,21 +20,37 @@ connectDB()
     console.log("Database Connection Failed");
   });
 
-app.use(express.json()); // global mw to convert JSON into object
+app.use(express.json());
+app.use(cookieParser());
 
 // login api
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email });
+    if (!user) return res.send("Invalid Email");
 
-    if (!user) res.send("Invalid Email");
+    console.log("req.body", req.body);
+    console.log({ user });
 
-    const isCorrect = bcrypt.compare(password, user.password);
+    const isCorrect = await user.validatePassword(password);
 
-    if (isCorrect) res.send("User Login Successfull");
-    else throw new Error("Incorrect Password");
-  } catch {}
+    console.log("Is Correct", isCorrect);
+
+    if (isCorrect) {
+      const token = await user.getJWT();
+      res.cookie("token", token, {
+        expires: new Date(Date.now() + 900000),
+        secure: true,
+      });
+      return res.send("User Login Successful");
+    } else {
+      return res.send("Incorrect Password");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
 });
 
 app.post("/signup", async (req, res) => {
@@ -69,7 +87,7 @@ app.get("/feed", async (req, res) => {
     res.status(500).send(err);
   }
 });
-// feed API: get a single user from DB by email
+//  API: get a single user from DB by email
 app.get("/user", async (req, res) => {
   const userLName = req.body.lastName;
 
@@ -83,6 +101,16 @@ app.get("/user", async (req, res) => {
     }
   } catch (err) {
     res.status(400).send("User not found");
+  }
+});
+
+app.get("/profile", userAuth, async (req, res) => {
+  try {
+    const user = req.user;
+
+    res.send(user);
+  } catch (err) {
+    console.log({ err });
   }
 });
 
@@ -194,3 +222,8 @@ app.patch("/user/:userID", async (req, res) => {
 
 //   }
 // );
+
+app.post("/sendconnectionrequest", userAuth, async (req, res) => {
+  console.log("Send connection request");
+  res.send("connection request");
+});
