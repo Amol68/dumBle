@@ -28,6 +28,13 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/logout",async(req,res)=>{
+   res.cookie("token",null,{
+    expires:new Date(Date.now())
+   })
+   res.send("Log Out Successfull");
+})
+
 router.post("/signup", async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
@@ -48,5 +55,7 @@ router.post("/signup", async (req, res) => {
     res.status(400).send(`Error Saving The User ${error.message}`);
   }
 });
+
+
 
 module.exports = router;

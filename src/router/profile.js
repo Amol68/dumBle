@@ -1,11 +1,52 @@
 const express = require("express");
 const { userAuth } = require("../middlewares/auth");
-userAuth
+const User = require("../models/user");
+const {
+  validateSignUpData,
+  validateProfileData,
+} = require("../utils/validations");
 const router = express.Router();
 
+router.get("/profile/view", userAuth, async (req, res) => {
+  try {
+    const user = req.user;
+
+    res.send(user);
+  } catch (err) {
+    res.send("Error" + err);
+    console.log({ err });
+  }
+});
+
+router.patch("/profile/edit", userAuth, async (req, res) => {
+  try {
+    if (!validateProfileData(req)) {
+      res.status(400).send("Invalid Edit Request");
+    }
+
+    const loggedUser = req.user;
+
+    Object.keys(req.body).forEach((key) => (loggedUser[key] = req.body[key]));
+    await loggedUser.save();
+
+    res.json({
+      message: "User Profile Updated Successfully",
+      data: loggedUser,
+    });
+  } catch (err) {
+    res.send("Error" + err);
+  }
+});
+
+router.patch("/profile/password",userAuth,async(req,res)=>{
+    
+})
+
 //  API: get a single user from DB by email
-router.get("/user", async (req, res) => {
+router.get("/user/view", async (req, res) => {
   const userLName = req.body.lastName;
+
+  console.log({ userLName });
 
   try {
     const user = await User.findOne({ lastName: userLName });
@@ -32,16 +73,6 @@ router.get("/feed", async (req, res) => {
     }
   } catch (err) {
     res.status(500).send(err);
-  }
-});
-
-router.get("/profile", userAuth, async (req, res) => {
-  try {
-    const user = req.user;
-
-    res.send(user);
-  } catch (err) {
-    console.log({ err });
   }
 });
 
@@ -88,3 +119,5 @@ router.patch("/user/:userID", async (req, res) => {
     res.status(500).send("User Update Failed:" + err.message);
   }
 });
+
+module.exports = router;

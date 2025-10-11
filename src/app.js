@@ -21,7 +21,9 @@ connectDB()
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/",authRoute)
+app.use("/",authRoute);
+app.use("/",profileRoute);
+app.use("/",requestRoute)
 
 // app.use("/getUserData", (req, res) => {
 //   // db query & other logic
