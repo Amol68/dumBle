@@ -53,7 +53,7 @@ const userSchema = mongoose.Schema(
   }
 );
 
-(userSchema.methods.getJWT = async function () {
+userSchema.methods.getJWT = async function () {
   const user = this;
 
   const token = await jwt.sign({ id: user._id }, "DEV$Tinder@123", {
@@ -61,13 +61,14 @@ const userSchema = mongoose.Schema(
   });
 
   return token;
-}),
-  (userSchema.methods.validatePassword = async function (userPassword) {
-    const user = this;
+};
 
-    const isValid = await bcrypt.compare(userPassword, user.password);
-    return isValid;
-  });
+userSchema.methods.validatePassword = async function (userPassword) {
+  const user = this;
+
+  const isValid = await bcrypt.compare(userPassword, user.password);
+  return isValid;
+};
 
 const userModel = mongoose.model("User", userSchema);
 

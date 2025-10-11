@@ -1,13 +1,11 @@
 const express = require("express");
 const connectDB = require("./config/database");
-const bcrypt = require("bcrypt");
+const authRoute = require("./router/auth");
+const profileRoute = require("./router/profile");
+const requestRoute = require("./router/request");
 const cookieParser = require("cookie-parser");
 const app = express();
 const port = 3000;
-const User = require("./models/user");
-const { validateSignUpData } = require("./utils/validations");
-const jwt = require("jsonwebtoken");
-const { userAuth } = require("../src/middlewares/auth");
 
 connectDB()
   .then(() => {
@@ -23,140 +21,7 @@ connectDB()
 app.use(express.json());
 app.use(cookieParser());
 
-// login api
-app.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) return res.send("Invalid Email");
-
-    console.log("req.body", req.body);
-    console.log({ user });
-
-    const isCorrect = await user.validatePassword(password);
-
-    console.log("Is Correct", isCorrect);
-
-    if (isCorrect) {
-      const token = await user.getJWT();
-      res.cookie("token", token, {
-        expires: new Date(Date.now() + 900000),
-        secure: true,
-      });
-      return res.send("User Login Successful");
-    } else {
-      return res.send("Incorrect Password");
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Server error");
-  }
-});
-
-app.post("/signup", async (req, res) => {
-  const { firstName, lastName, email, password } = req.body;
-
-  const hash = await bcrypt.hash(password, 10);
-
-  const user = new User({
-    firstName,
-    lastName,
-    email,
-    password: hash,
-  });
-
-  try {
-    validateSignUpData(req);
-    await user.save();
-    res.send("User added successfully");
-  } catch (error) {
-    res.status(400).send(`Error Saving The User ${error.message}`);
-  }
-});
-// feed API: get all users from DB
-app.get("/feed", async (req, res) => {
-  try {
-    const users = await User.find({});
-
-    if (users.length === 0) {
-      res.status(404).send("Users not found");
-    } else {
-      res.send(users);
-    }
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
-//  API: get a single user from DB by email
-app.get("/user", async (req, res) => {
-  const userLName = req.body.lastName;
-
-  try {
-    const user = await User.findOne({ lastName: userLName });
-
-    if (user.length === 0) {
-      res.status(404).send("User Not Found");
-    } else {
-      res.send(user);
-    }
-  } catch (err) {
-    res.status(400).send("User not found");
-  }
-});
-
-app.get("/profile", userAuth, async (req, res) => {
-  try {
-    const user = req.user;
-
-    res.send(user);
-  } catch (err) {
-    console.log({ err });
-  }
-});
-
-app.delete("/user", async (req, res) => {
-  const id = req.body.id;
-
-  try {
-    const user = await User.findByIdAndDelete(id);
-    res.send("User deleted successfully");
-  } catch {
-    res.status(400).send("User cannot be deleted");
-  }
-});
-
-app.patch("/user/:userID", async (req, res) => {
-  const body = req.body;
-  const userID = req.params?.userID;
-
-  // const allowedFields = [
-  //   "id",
-  //   "firstName",
-  //   "lastName",
-  //   "password",
-  //   "about",
-  //   "gender",
-  //   "skills",
-  // ];
-
-  // const isUpdateAllowed = Object.keys(body).every((key) =>
-  //   allowedFields.includes(key)
-  // );
-  // if (!isUpdateAllowed) res.send("Update Not Allowed");
-
-  // if (req.body.skills > 10) res.send("Too Many Skills");
-
-  try {
-    validateSignUpData(req);
-
-    const hash = await User.findByIdAndUpdate({ _id: userID }, body, {
-      runValidators: true,
-    });
-    res.send("User Updated Successfully");
-  } catch (err) {
-    res.status(500).send("User Update Failed:" + err.message);
-  }
-});
+app.use("/",authRoute)
 
 // app.use("/getUserData", (req, res) => {
 //   // db query & other logic
@@ -222,8 +87,3 @@ app.patch("/user/:userID", async (req, res) => {
 
 //   }
 // );
-
-app.post("/sendconnectionrequest", userAuth, async (req, res) => {
-  console.log("Send connection request");
-  res.send("connection request");
-});
