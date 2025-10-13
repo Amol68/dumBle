@@ -38,8 +38,8 @@ router.patch("/profile/edit", userAuth, async (req, res) => {
   }
 });
 
-router.patch("/profile/password",userAuth,async(req,res)=>{
-    
+router.patch("/profile/password",async(req,res)=>{
+        
 })
 
 //  API: get a single user from DB by email
@@ -119,5 +119,7 @@ router.patch("/user/:userID", async (req, res) => {
     res.status(500).send("User Update Failed:" + err.message);
   }
 });
+
+
 
 module.exports = router;

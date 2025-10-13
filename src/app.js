@@ -3,6 +3,7 @@ const connectDB = require("./config/database");
 const authRoute = require("./router/auth");
 const profileRoute = require("./router/profile");
 const requestRoute = require("./router/request");
+const connectionRoute = require("./router/connection")
 const cookieParser = require("cookie-parser");
 const app = express();
 const port = 3000;
@@ -23,7 +24,9 @@ app.use(cookieParser());
 
 app.use("/",authRoute);
 app.use("/",profileRoute);
-app.use("/",requestRoute)
+app.use("/",requestRoute);
+app.use("/",connectionRoute)
+
 
 // app.use("/getUserData", (req, res) => {
 //   // db query & other logic

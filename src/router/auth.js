@@ -9,9 +9,13 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
+
+  console.log({user})
     if (!user) return res.send("Invalid Email");
 
     const isCorrect = await user.validatePassword(password);
+
+    console.log({user,isCorrect});
 
     if (isCorrect) {
       const token = await user.getJWT();
@@ -55,6 +59,9 @@ router.post("/signup", async (req, res) => {
     res.status(400).send(`Error Saving The User ${error.message}`);
   }
 });
+
+
+
 
 
 
