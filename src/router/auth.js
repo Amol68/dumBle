@@ -51,6 +51,10 @@ router.post("/signup", async (req, res) => {
     password: hash,
   });
 
+  const userWithEmail = User.findOne({email:email});
+
+  if(userWithEmail) res.send("User with given email already exists");
+
   try {
     validateSignUpData(req);
     await user.save();

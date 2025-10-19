@@ -62,19 +62,19 @@ router.get("/user/view", async (req, res) => {
 });
 
 // feed API: get all users from DB
-router.get("/feed", async (req, res) => {
-  try {
-    const users = await User.find({});
+// router.get("/feed", async (req, res) => {
+//   try {
+//     const users = await User.find({});
 
-    if (users.length === 0) {
-      res.status(404).send("Users not found");
-    } else {
-      res.send(users);
-    }
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
+//     if (users.length === 0) {
+//       res.status(404).send("Users not found");
+//     } else {
+//       res.send(users);
+//     }
+//   } catch (err) {
+//     res.status(500).send(err);
+//   }
+// });
 
 router.delete("/user", async (req, res) => {
   const id = req.body.id;
