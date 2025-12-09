@@ -4,9 +4,6 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const userSchema = mongoose.Schema(
   {
-
-     
-
     firstName: {
       type: String,
       required: true,
@@ -42,11 +39,10 @@ const userSchema = mongoose.Schema(
 
     about: {
       type: String,
-      default: "This is about me",
+     // default: "This is about me",
     },
     photoUrl: {
       type: String,
-      default: "www.dummyimage.com",
     },
     skills: {
       type: [String],

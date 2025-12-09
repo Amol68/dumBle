@@ -6,7 +6,9 @@ const User = require("../models/user");
 
 const router = express.Router();
 
-router.get("/user/requests/pending", userAuth, async (req, res) => {
+router.get("/user/requests/received", userAuth, async (req, res) => {
+
+  
   try {
     const user = req.user;
     if (!user) res.send("User not logged in");
@@ -15,7 +17,7 @@ router.get("/user/requests/pending", userAuth, async (req, res) => {
       toUserID: user._id,
 
       status: "interested",
-    }).populate("fromUserID", ["firstName", "lastName"]);
+    }).populate("fromUserID", ["firstName", "lastName","photoUrl","about"]);
 
     res.json({
       message: "Requests Fetched Successfully",
@@ -43,16 +45,20 @@ router.get("/user/connections", userAuth, async (req, res) => {
         },
       ],
     })
-      .populate("fromUserID", ["firstName", "lastName"])
-      .populate("toUserID", ["firstName", "lastName"]);
+      .populate("fromUserID", ["firstName", "lastName", "photoUrl", "about","age","gender"])
+      .populate("toUserID", ["firstName", "lastName", "photoUrl", "about","age","gender"]);
+
+    console.log("connections", connections);
 
     const data = connections.map((connection) => {
       if (connection.fromUserID._id.toString() === user._id.toString()) {
-        return connection.toUserId;
+        return connection.toUserID;
       } else {
         return connection.fromUserID;
       }
     });
+
+    console.log("data", data);
 
     res.status(200).json({
       message: "Connections fetched Successfully",
@@ -89,7 +95,7 @@ router.get("/user/feed", userAuth, async (req, res) => {
         { _id: { $ne: user._id } },
       ],
     })
-      .select(["firstName", "lastName", "about", "photoUrl", "skills"])
+      .select(["firstName", "lastName", "about", "photoUrl", "skills","age","gender"])
       .skip(page - 1 * 5)
       .limit(limit);
 

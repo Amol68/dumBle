@@ -44,7 +44,7 @@ router.post("/request/send/:status/:toUserId", userAuth, async (req, res) => {
       data,
     });
   } catch (err) {
-    res.status(400).send(`Error ${err.message}`);
+    res.status(400).send(`Errorr ${err.message}`);
   }
 });
 

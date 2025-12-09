@@ -38,9 +38,7 @@ router.patch("/profile/edit", userAuth, async (req, res) => {
   }
 });
 
-router.patch("/profile/password",async(req,res)=>{
-        
-})
+router.patch("/profile/password", async (req, res) => {});
 
 //  API: get a single user from DB by email
 router.get("/user/view", async (req, res) => {
@@ -61,21 +59,6 @@ router.get("/user/view", async (req, res) => {
   }
 });
 
-// feed API: get all users from DB
-// router.get("/feed", async (req, res) => {
-//   try {
-//     const users = await User.find({});
-
-//     if (users.length === 0) {
-//       res.status(404).send("Users not found");
-//     } else {
-//       res.send(users);
-//     }
-//   } catch (err) {
-//     res.status(500).send(err);
-//   }
-// });
-
 router.delete("/user", async (req, res) => {
   const id = req.body.id;
 
@@ -91,23 +74,6 @@ router.patch("/user/:userID", async (req, res) => {
   const body = req.body;
   const userID = req.params?.userID;
 
-  // const allowedFields = [
-  //   "id",
-  //   "firstName",
-  //   "lastName",
-  //   "password",
-  //   "about",
-  //   "gender",
-  //   "skills",
-  // ];
-
-  // const isUpdateAllowed = Object.keys(body).every((key) =>
-  //   allowedFields.includes(key)
-  // );
-  // if (!isUpdateAllowed) res.send("Update Not Allowed");
-
-  // if (req.body.skills > 10) res.send("Too Many Skills");
-
   try {
     validateSignUpData(req);
 
@@ -119,7 +85,5 @@ router.patch("/user/:userID", async (req, res) => {
     res.status(500).send("User Update Failed:" + err.message);
   }
 });
-
-
 
 module.exports = router;

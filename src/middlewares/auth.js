@@ -1,12 +1,11 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
-
 const userAuth = async (req, res, next) => {
   try {
     const { token } = req.cookies;
 
-    if(!token) throw new Error("Invalid Token");
+    if (!token) throw new Error("Invalid Token");
 
     const decodedData = await jwt.verify(token, "DEV$Tinder@123");
 
@@ -26,4 +25,4 @@ const userAuth = async (req, res, next) => {
   }
 };
 
-module.exports = {userAuth}
+module.exports = { userAuth };

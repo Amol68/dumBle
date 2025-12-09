@@ -8,6 +8,8 @@ router.post(
   "/request/review/:status/:requestId",
   userAuth,
   async (req, res) => {
+
+    console.log("api hit")
     const loggedInUser = req.user;
 
     if (!loggedInUser) return res.send({ message: "Please login first" });
@@ -16,13 +18,13 @@ router.post(
     const allowedStatus = ["rejected", "accepted"];
 
     if (!allowedStatus.includes(status.trim())) {
-      return res.status(400).send({ message: "Invalid Status" });
+      return res.status(401).send({ message: "Invalid Status" });
     }
 
     const connectionRequest = await ConnectionRequest.findOne({
       _id: req.params.requestId,
       toUserID: loggedInUser._id,
-      status: "interested" ,
+      status: "interested",
     });
 
     if (!connectionRequest) {
