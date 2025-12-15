@@ -13,9 +13,9 @@ const port = 3000;
 connectDB()
   .then(() => {
     console.log("Database Connection Successfull");
-    app.listen(port, () => {
-      console.log(`Example app listening on port ${port}`);
-    });
+    app.listen(3000, "0.0.0.0", () => {
+  console.log("Server running on port 3000");
+});
   })
   .catch((err) => {
     console.log("Database Connection Failed");
