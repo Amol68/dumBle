@@ -13,20 +13,23 @@ const port = 3000;
 connectDB()
   .then(() => {
     console.log("Database Connection Successfull");
-    app.listen(3000, "0.0.0.0", () => {
-  console.log("Server running on port 3000");
-});
   })
   .catch((err) => {
     console.log("Database Connection Failed");
   });
 
+app.listen(3000, "0.0.0.0", () => {
+  console.log("Server running on port 3000");
+});
+
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-  origin:"http://localhost:5173",
-  credentials:true
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use("/", authRoute);
 app.use("/", profileRoute);
 app.use("/", requestRoute);
