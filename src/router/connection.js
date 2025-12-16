@@ -4,7 +4,7 @@ const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/user");
 const router = express.Router();
 
-router.post("/request/send/:status/:toUserId", userAuth, async (req, res) => {
+router.post("/send/:status/:toUserId", userAuth, async (req, res) => {
   try {
     const fromUserID = req.user._id;
     const toUserID = req.params.toUserId.trim();

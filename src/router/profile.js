@@ -7,7 +7,7 @@ const {
 } = require("../utils/validations");
 const router = express.Router();
 
-router.get("/profile/view", userAuth, async (req, res) => {
+router.get("/view", userAuth, async (req, res) => {
   try {
     const user = req.user;
 
@@ -18,7 +18,7 @@ router.get("/profile/view", userAuth, async (req, res) => {
   }
 });
 
-router.patch("/profile/edit", userAuth, async (req, res) => {
+router.patch("/edit", userAuth, async (req, res) => {
   try {
     if (!validateProfileData(req)) {
       res.status(400).send("Invalid Edit Request");
@@ -38,7 +38,7 @@ router.patch("/profile/edit", userAuth, async (req, res) => {
   }
 });
 
-router.patch("/profile/password", async (req, res) => {});
+router.patch("/password", async (req, res) => {});
 
 //  API: get a single user from DB by email
 router.get("/user/view", async (req, res) => {

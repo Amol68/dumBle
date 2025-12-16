@@ -5,7 +5,7 @@ const ConnectionRequest = require("../models/connectionRequest");
 const router = express.Router();
 
 router.post(
-  "/request/review/:status/:requestId",
+  "/review/:status/:requestId",
   userAuth,
   async (req, res) => {
 
