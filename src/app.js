@@ -30,12 +30,11 @@ app.use(
     credentials: true,
   })
 );
-app.use("/", authRoute);
-app.use("/", profileRoute);
-app.use("/", requestRoute);
-app.use("/", connectionRoute);
-app.use("/", userRoute);
-
+app.use("/api/auth", authRoute);
+app.use("/api/profile", profileRoute);
+app.use("/api/request", requestRoute);
+app.use("/api/connection", connectionRoute);
+app.use("/api/user", userRoute);
 // app.use("/getUserData", (req, res) => {
 //   // db query & other logic
 //   throw new Error();
