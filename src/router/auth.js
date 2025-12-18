@@ -26,7 +26,9 @@ router.post("/login", async (req, res) => {
       const token = await user.getJWT();
       res.cookie("token", token, {
         expires: new Date(Date.now() + 900000),
-        secure: true,
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
       });
       return res.json({ message: "User Login Successful", data: user });
     } else {
@@ -62,7 +64,9 @@ router.post("/signup", async (req, res) => {
     const token = await savedUser.getJWT();
     res.cookie("token", token, {
       expires: new Date(Date.now() + 900000),
-      secure: true,
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
     });
     return res.json({ message: "Sign Up Successful", data: savedUser });
   } catch (error) {

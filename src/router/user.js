@@ -6,7 +6,7 @@ const User = require("../models/user");
 
 const router = express.Router();
 
-router.get("/user/requests/received", userAuth, async (req, res) => {
+router.get("requests/received", userAuth, async (req, res) => {
 
   
   try {
@@ -28,7 +28,7 @@ router.get("/user/requests/received", userAuth, async (req, res) => {
   }
 });
 
-router.get("/user/connections", userAuth, async (req, res) => {
+router.get("/connections", userAuth, async (req, res) => {
   try {
     const user = req.user;
     if (!user) res.send("Please log in first");
@@ -69,7 +69,7 @@ router.get("/user/connections", userAuth, async (req, res) => {
   }
 });
 
-router.get("/user/feed", userAuth, async (req, res) => {
+router.get("/feed", userAuth, async (req, res) => {
   try {
     const user = req.user;
 
