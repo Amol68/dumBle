@@ -30,11 +30,11 @@ app.use(
     credentials: true,
   })
 );
-app.use("/auth", authRoute);
-app.use("/profile", profileRoute);
-app.use("/request", requestRoute);
-app.use("/connection", connectionRoute);
-app.use("/user", userRoute);
+app.use("/", authRoute);
+app.use("/", profileRoute);
+app.use("/", requestRoute);
+app.use("/", connectionRoute);
+app.use("/", userRoute);
 
 // app.use("/getUserData", (req, res) => {
 //   // db query & other logic
