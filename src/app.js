@@ -26,15 +26,15 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "http://dumble-app.duckdns.org"],
     credentials: true,
   })
 );
-app.use("/", authRoute);
-app.use("/", profileRoute);
-app.use("/", requestRoute);
-app.use("/", connectionRoute);
-app.use("/", userRoute);
+app.use("/api", authRoute);
+app.use("/api", profileRoute);
+app.use("/api", requestRoute);
+app.use("/api", connectionRoute);
+app.use("/api", userRoute);
 
 // app.use("/getUserData", (req, res) => {
 //   // db query & other logic
