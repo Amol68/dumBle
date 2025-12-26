@@ -1,4 +1,6 @@
 const express = require("express");
+const dotenv = require("dotenv");
+dotenv.config();
 const connectDB = require("./config/database");
 const authRoute = require("./router/auth");
 const profileRoute = require("./router/profile");
@@ -8,17 +10,18 @@ const userRoute = require("./router/user");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 
 connectDB()
   .then(() => {
     console.log("Database Connection Successfull");
   })
   .catch((err) => {
+    console.log("Database Connection Error", err);
     console.log("Database Connection Failed");
   });
 
-app.listen(3000, "0.0.0.0", () => {
+app.listen(process.env.PORT, "0.0.0.0", () => {
   console.log("Server running on port 3000");
 });
 
@@ -30,11 +33,14 @@ app.use(
     credentials: true,
   })
 );
-app.use("/api", authRoute);
-app.use("/api", profileRoute);
-app.use("/api", requestRoute);
-app.use("/api", connectionRoute);
-app.use("/api", userRoute);
+
+const routePrefix = location.hostname === "localhost" ? "/" : "/api";
+
+app.use(routePrefix, authRoute);
+app.use(routePrefix, profileRoute);
+app.use(routePrefix, requestRoute);
+app.use(routePrefix, connectionRoute);
+app.use(routePrefix, userRoute);
 
 // app.use("/getUserData", (req, res) => {
 //   // db query & other logic
