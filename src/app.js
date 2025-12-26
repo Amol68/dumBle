@@ -34,13 +34,11 @@ app.use(
   })
 );
 
-const routePrefix = location.hostname === "localhost" ? "/" : "/api";
-
-app.use(routePrefix, authRoute);
-app.use(routePrefix, profileRoute);
-app.use(routePrefix, requestRoute);
-app.use(routePrefix, connectionRoute);
-app.use(routePrefix, userRoute);
+app.use("/", authRoute);
+app.use("/", profileRoute);
+app.use("/", requestRoute);
+app.use("/", connectionRoute);
+app.use("/", userRoute);
 
 // app.use("/getUserData", (req, res) => {
 //   // db query & other logic
