@@ -1,6 +1,6 @@
+require('dotenv').config();
 const express = require("express");
 const connectDB = require("./config/database");
-require('dotenv').config();
 const authRoute = require("./router/auth");
 const profileRoute = require("./router/profile");
 const requestRoute = require("./router/request");
@@ -9,7 +9,7 @@ const userRoute = require("./router/user");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const app = express();
-const port = process.env.PORT;
+
 
 connectDB()
   .then(() => {
