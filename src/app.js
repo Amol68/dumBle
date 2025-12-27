@@ -33,11 +33,11 @@ app.use(
   })
 );
 
-app.use("/", authRoute);
-app.use("/", profileRoute);
-app.use("/", requestRoute);
-app.use("/", connectionRoute);
-app.use("/", userRoute);
+app.use("/api", authRoute);
+app.use("/api", profileRoute);
+app.use("/api", requestRoute);
+app.use("/api", connectionRoute);
+app.use("/api", userRoute);
 
 // app.use("/getUserData", (req, res) => {
 //   // db query & other logic
