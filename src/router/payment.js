@@ -77,10 +77,10 @@ router.post("/payment/webhook", async (req, res) => {
   }
 });
 
-router.get("/premium/verfy", userAuth, async (req, res) => {
+router.get("/payment/premium/verify", userAuth, async (req, res) => {
   const user = req.user;
 
-  if (user.isPremium) {
+  if (user.premium) {
     return res.json({ isPremium: true });
   } else {
     return res.json({ isPremium: false });
