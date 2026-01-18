@@ -64,7 +64,7 @@ router.post("/payment/webhook", async (req, res) => {
 
     const user = await User.findOne({ _id: payment.userId });
     user.premium = true;
-    user.memberShipType = payment.notes.memberShipType;
+    user.memberShipType = payment.notes.membershipType;
     await user.save();
     if (req.body.event === "payment.captured") {
     }
