@@ -39,9 +39,16 @@ const userSchema = mongoose.Schema(
 
     about: {
       type: String,
-     // default: "This is about me",
+      // default: "This is about me",
     },
     photoUrl: {
+      type: String,
+    },
+    premium: {
+      type: Boolean,
+      default: false,
+    },
+    memberShipType: {
       type: String,
     },
     skills: {
@@ -50,7 +57,7 @@ const userSchema = mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 userSchema.methods.getJWT = async function () {

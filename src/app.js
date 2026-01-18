@@ -6,6 +6,7 @@ const profileRoute = require("./router/profile");
 const requestRoute = require("./router/request");
 const connectionRoute = require("./router/connection");
 const userRoute = require("./router/user");
+const paymentRoute = require("./router/payment")
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const app = express();
@@ -38,6 +39,7 @@ app.use("/api", profileRoute);
 app.use("/api", requestRoute);
 app.use("/api", connectionRoute);
 app.use("/api", userRoute);
+app.use("/api", paymentRoute);
 
 // app.use("/getUserData", (req, res) => {
 //   // db query & other logic

@@ -12,6 +12,8 @@ router.post("/logout", async (req, res) => {
 });
 // login api
 router.post("/login", async (req, res) => {
+
+  
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
@@ -35,6 +37,7 @@ router.post("/login", async (req, res) => {
       return res.send("Incorrect Password");
     }
   } catch (err) {
+    console.log("swjsywdkdekd",err)
     res.status(500).send("Server error", err);
   }
 });
